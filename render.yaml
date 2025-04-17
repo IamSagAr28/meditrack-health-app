@@ -1,0 +1,58 @@
+services:
+  # Frontend React/Vite application
+  - type: web
+    name: meditrack-frontend
+    runtime: static
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    envVars:
+      - key: VITE_APP_API_URL
+        value: https://meditrack-backend.onrender.com
+      - key: VITE_APP_CHATBOT_URL
+        value: https://meditrack-chatbot.onrender.com
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: no-cache
+
+  # Backend Express service
+  - type: web
+    name: meditrack-backend
+    runtime: node
+    buildCommand: npm install
+    startCommand: node server.js
+    rootDir: server
+    envVars:
+      - key: PORT
+        value: 8080
+      - key: MONGODB_URI
+        sync: false # This will be set manually in the Render dashboard
+      - key: NODE_ENV
+        value: production
+      - key: FRONTEND_URL
+        value: https://meditrack-frontend.onrender.com
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: no-store
+
+  # Flask Chatbot service
+  - type: web
+    name: meditrack-chatbot
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python run_flask.py
+    rootDir: server/chatbot
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false # This will be set manually in the Render dashboard
+      - key: ASSEMBLYAI_API_KEY
+        sync: false # This will be set manually in the Render dashboard
+      - key: FLASK_APP
+        value: app.py
+      - key: FLASK_ENV
+        value: production
+      - key: PORT
+        value: 8080
+      - key: FRONTEND_URL
+        value: https://meditrack-frontend.onrender.com
