@@ -345,13 +345,19 @@
 
     <div class="container">
         <div class="chat-header">
-            <img src="https://cdn-icons-png.flaticon.com/512/2965/2965567.png" alt="MediTrack Logo" style="height:60px;width:60px;margin-bottom:0.5rem;">
-            <h1>AI Assistant Pro</h1>
-            <p>Your smart healthcare assistant</p>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <a href="http://localhost:8080" class="btn btn-primary" style="background: linear-gradient(90deg, #2563eb 0%, #1d4ed8 100%); border: none;">
+                    <i class="fas fa-home"></i> Home
+                </a>
+                <h1>AI Assistant Pro</h1>
+                <div style="width: 80px;"></div> <!-- Spacer for balance -->
+            </div>
+            <p class="lead">Your medical questions answered by AI</p>
         </div>
         
         <div class="chat-container">
-            <div class="avatar user-avatar"><img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User Avatar"></div>
+            <!-- Chat messages will be displayed here -->
+            <div id="chatBox" class="chat-messages" style="height: 400px; overflow-y: auto; margin-bottom: 20px; padding: 15px; background: white; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"></div>
             
             <div class="typing-indicator" id="typingIndicator">
                 <span>AI is thinking</span>
@@ -396,7 +402,7 @@
         function createAvatar(isUser) {
             const avatar = document.createElement('div');
             avatar.className = `avatar ${isUser ? 'user-avatar' : 'bot-avatar'}`;
-            avatar.innerHTML = isUser ? '<div class="avatar bot-avatar"><img src="https://cdn-icons-png.flaticon.com/512/4712/4712035.png" alt="Bot Avatar"></div>';
+            avatar.innerHTML = isUser ? '<img src="https://cdn-icons-png.flaticon.com/512/4712/4712035.png" alt="User Avatar">' : '<img src="https://cdn-icons-png.flaticon.com/512/3597/3597075.png" alt="Bot Avatar">';
             return avatar;
         }
 
@@ -439,7 +445,9 @@
             typingIndicator.style.display = 'flex';
             
             try {
-                const response = await axios.post('/chatbot/chat', { user_input: text });
+                // Use window.location.origin to make this work in both development and production
+                const chatbotBaseUrl = window.location.hostname === 'localhost' ? 'http://localhost:5001' : 'https://meditrack-chatbot.onrender.com';
+                const response = await axios.post(`${chatbotBaseUrl}/chatbot/chat`, { user_input: text });
                 addMessage(response.data.reply, 'bot');
             } catch (error) {
                 addMessage('Sorry, there was an error processing your request.', 'bot');
@@ -485,11 +493,13 @@
                     typingIndicator.style.display = 'flex';
                     
                     try {
-                        const response = await axios.post('/chatbot/transcribe', formData);
+                        // Use window.location.origin to make this work in both development and production
+                        const chatbotBaseUrl = window.location.hostname === 'localhost' ? 'http://localhost:5001' : 'https://meditrack-chatbot.onrender.com';
+                        const response = await axios.post(`${chatbotBaseUrl}/chatbot/transcribe`, formData);
                         const transcript = response.data.transcript;
                         addMessage(transcript, 'user');
 
-                        const chatResponse = await axios.post('/chatbot/chat', { user_input: transcript });
+                        const chatResponse = await axios.post(`${chatbotBaseUrl}/chatbot/chat`, { user_input: transcript });
                         addMessage(chatResponse.data.reply, 'bot');
                     } catch (error) {
                         addMessage('Sorry, there was an error processing your request.', 'bot');

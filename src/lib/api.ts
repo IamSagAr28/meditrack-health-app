@@ -1,8 +1,16 @@
 import axios from 'axios';
 
+// Set API URL based on environment
+const isDevelopment = !import.meta.env.PROD;
+
+// Use localhost for development, deployed API URL for production
+const apiBaseURL = isDevelopment 
+  ? 'http://localhost:5002/api'
+  : 'https://meditrack-api.onrender.com/api';
+
 // Create axios instance with common configuration
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api',
+  baseURL: apiBaseURL,
   headers: {
     'Content-Type': 'application/json'
   }
@@ -17,7 +25,7 @@ api.interceptors.response.use(
   }
 );
 
-const API_URL = 'http://localhost:5000/api';
+const API_URL = apiBaseURL;
 
 // Patient Services
 export const patientAPI = {
