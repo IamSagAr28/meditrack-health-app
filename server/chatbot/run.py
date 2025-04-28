@@ -1,4 +1,4 @@
-from flask import Flask, redirect
+from flask import Flask, redirect, Response
 # Use a proper import that doesn't depend on the module name
 import os
 import sys
@@ -14,6 +14,12 @@ load_dotenv()
 
 # Initialize Flask app
 app = Flask(__name__)
+
+# Add custom CSP headers to allow scripts, media, and other resources
+@app.after_request
+def add_security_headers(response):
+    response.headers['Content-Security-Policy'] = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob:; connect-src 'self' https://*.googleapis.com https://*.assemblyai.com; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; media-src 'self' blob:;"
+    return response
 
 # Configure CORS with specific allowed origins
 allowed_origins = [
