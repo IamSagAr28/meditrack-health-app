@@ -37,7 +37,13 @@ else:
 
 @chatbot_bp.route('/')
 def index():
-    return render_template('index.html')
+    response = render_template('index.html')
+    response.headers['Content-Security-Policy'] = "default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com"
+    return response
+
+@chatbot_bp.route('/test')
+def test():
+    return render_template('test.html')
 
 @chatbot_bp.route('/chat', methods=['POST'])
 def chat():
