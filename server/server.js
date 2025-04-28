@@ -33,29 +33,17 @@ const allowedOrigins = [
   'https://medi-care1528-4b4f90.netlify.app'
 ];
 
+// Updated CORS configuration to fix authentication issues - April 2025
 app.use(cors({
-  origin: function(origin, callback) {
-    // Allow requests with no origin (like mobile apps, curl requests)
-    if (!origin) return callback(null, true);
-    
-    // Check if the origin is allowed
-    if (allowedOrigins.indexOf(origin) === -1) {
-      // If not in whitelist but we're in development, allow it anyway
-      if (process.env.NODE_ENV !== 'production') {
-        return callback(null, true);
-      }
-      // In production, only allow whitelisted origins
-      var msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-      return callback(new Error(msg), false);
-    }
-    return callback(null, true);
-  },
+  origin: '*', // Temporarily allow all origins to diagnose the issue
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Trigger redeployment
 
 // Test route to verify server is working
 app.get('/test', (req, res) => {
