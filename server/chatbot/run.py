@@ -44,3 +44,6 @@ if __name__ == "__main__":
     # Run Flask app
     port = int(os.environ.get("PORT", 5001))
     app.run(host="0.0.0.0", port=port, debug=True)
+
+# Make sure the application binds to the port provided by Render
+app.config['PORT'] = int(os.environ.get("PORT", 5001))
