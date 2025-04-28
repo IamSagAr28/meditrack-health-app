@@ -6,7 +6,7 @@ const isDevelopment = !import.meta.env.PROD;
 // Use localhost for development, deployed API URL for production
 const apiBaseURL = isDevelopment 
   ? 'http://localhost:5002/api'
-  : 'https://meditrack-api.onrender.com/api';
+  : 'https://meditrack-health-app.onrender.com/api';
 
 // Create axios instance with common configuration
 const api = axios.create({
