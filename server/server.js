@@ -29,7 +29,8 @@ const allowedOrigins = [
   'http://127.0.0.1:59819',
   'http://127.0.0.1:60265',
   'https://meditrack-frontend.onrender.com',
-  'https://meditrack-app.netlify.app'
+  'https://meditrack-app.netlify.app',
+  'https://medi-care1528-4b4f90.netlify.app'
 ];
 
 app.use(cors({
