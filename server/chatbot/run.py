@@ -15,8 +15,19 @@ load_dotenv()
 # Initialize Flask app
 app = Flask(__name__)
 
-# Configure CORS to allow requests from any origin
-CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
+# Configure CORS with specific allowed origins
+allowed_origins = [
+    'http://localhost:5173',
+    'http://localhost:8080',
+    'http://localhost:8081',
+    'http://127.0.0.1:59819',
+    'http://127.0.0.1:60265',
+    'https://meditrack-frontend.onrender.com',
+    'https://meditrack-app.netlify.app',
+    'https://medi-care1528-4b4f90.netlify.app'
+]
+
+CORS(app, resources={r"/*": {"origins": allowed_origins}}, supports_credentials=True)
 
 # Register chatbot blueprint
 app.register_blueprint(chatbot_bp)
